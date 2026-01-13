@@ -25,24 +25,57 @@
   <ul id="taskList"></ul>
 </div>
     <script>
-        function sayHello() {
+       // Load tasks when page loads
+  document.addEventListener("DOMContentLoaded", loadTasks);
+
+  function sayHello() {
     alert("Welcome to my first website!");
   }
 
   function addTask() {
-    let task = document.getElementById("taskInput").value;
+    let taskInput = document.getElementById("taskInput");
+    let task = taskInput.value.trim();
 
     if (task === "") {
       alert("Please enter a task");
       return;
     }
 
-    let li = document.createElement("li");
-    li.innerHTML = task + ' <button onclick="this.parentElement.remove()">Delete</button>';
+    let tasks = getTasks();
+    tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 
-    document.getElementById("taskList").appendChild(li);
-    document.getElementById("taskInput").value = "";
+    taskInput.value = "";
+    loadTasks();
   }
+
+  function deleteTask(index) {
+    let tasks = getTasks();
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+  }
+
+  function loadTasks() {
+    let taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+
+    let tasks = getTasks();
+
+    tasks.forEach((task, index) => {
+      let li = document.createElement("li");
+    li.innerHTML = `
+  ${task}
+  <button onclick="deleteTask(${index})">Delete</button>
+`;
+      taskList.appendChild(li);
+    });
+  }
+
+  function getTasks() {
+    return JSON.parse(localStorage.getItem("tasks")) || [];
+        }
+        
         
         
     </script>

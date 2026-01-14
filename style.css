@@ -40,3 +40,14 @@ li button {
   padding: 5px 10px;
   font-size: 14px;
 }
+ul {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+li {
+  width: 100%;
+  margin: 8px 0;
+}

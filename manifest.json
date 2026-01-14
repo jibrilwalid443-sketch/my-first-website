@@ -1,7 +1,7 @@
 {
   "name": "Walid To-Do App",
   "short_name": "ToDo",
-  "start_url": ".",
+  "start_url": "/"
   "display": "standalone",
   "background_color": "#f2f6fa",
   "theme_color": "#3498db",

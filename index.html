@@ -79,14 +79,13 @@ function loadTasks() {
       li.style.textDecoration = "line-through";
     }
 
-    li.innerHTML = `
-      ${task.text}
-      <button onclick="toggleTask(${index})">
-        ${task.completed ? "Undo" : "Done"}
-      </button>
-      <button onclick="deleteTask(${index})">Delete</button>
-    `;
-
+   li.innerHTML = `
+  ${task.text}
+  <button onclick="toggleTask(${index})">
+    ${task.completed ? "Undo" : "Done"}
+  </button>
+  <button onclick="deleteTask(${index})">Delete</button>
+`; 
     taskList.appendChild(li);
   });
 } 

@@ -42,36 +42,56 @@
     }
 
     let tasks = getTasks();
-    tasks.push(task);
+    tasks.push({
+  text: task,
+  completed: false
+});
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
     taskInput.value = "";
     loadTasks();
   }
 
-  function deleteTask(index) {
-    let tasks = getTasks();
-    tasks.splice(index, 1);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    loadTasks();
-  }
+ function deleteTask(index) {
+  let tasks = getTasks();
+  tasks.splice(index, 1);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
 
-  function loadTasks() {
-    let taskList = document.getElementById("taskList");
-    taskList.innerHTML = "";
+function toggleTask(index) {
+  let tasks = getTasks();
+  tasks[index].completed = !tasks[index].completed;
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
 
-    let tasks = getTasks();
+function loadTasks() {
+  let taskList = document.getElementById("taskList");
+  taskList.innerHTML = "";
 
-    tasks.forEach((task, index) => {
-      let li = document.createElement("li");
+  let tasks = getTasks();
+
+  tasks.forEach((task, index) => {
+    let li = document.createElement("li");
+
+    if (task.completed) {
+      li.style.textDecoration = "line-through";
+    }
+
     li.innerHTML = `
-  ${task}
-  <button onclick="deleteTask(${index})">Delete</button>
-`;
-      taskList.appendChild(li);
-    });
-  }
+      ${task.text}
+      <button onclick="toggleTask(${index})">
+        ${task.completed ? "Undo" : "Done"}
+      </button>
+      <button onclick="deleteTask(${index})">Delete</button>
+    `;
 
+    taskList.appendChild(li);
+  });
+} 
+      
+    
   function getTasks() {
     return JSON.parse(localStorage.getItem("tasks")) || [];
         }

@@ -22,11 +22,18 @@
 <br><br>
 <input type="date" id="dateInput">
 <br><br>
+    <input type="time" id="timeInput">
+<br><br>
 <button onclick="addTask()">Add Task</button>
 
 <ul id="taskList"></ul>
 </div>
     <script>
+        if ("Notification" in window) {
+  Notification.requestPermission();
+        }
+
+        
     document.addEventListener("DOMContentLoaded", loadTasks);
 
 function getTasks() {
@@ -37,8 +44,11 @@ function getTasks() {
 function addTask() {
   let taskInput = document.getElementById("taskInput");
   let dateInput = document.getElementById("dateInput");
+  let timeInput = document.getElementById("timeInput");
+
   let task = taskInput.value.trim();
   let taskDate = dateInput.value;
+  let taskTime = timeInput.value;
 
   if (task === "") {
     alert("Please enter a task");
@@ -49,6 +59,7 @@ function addTask() {
   tasks.push({
     text: task,
     date: taskDate,
+    time: taskTime,
     completed: false
   });
 
@@ -56,9 +67,10 @@ function addTask() {
 
   taskInput.value = "";
   dateInput.value = "";
+  timeInput.value = "";
 
   loadTasks();
-}
+        }
 
 function loadTasks() {
   let taskList = document.getElementById("taskList");
@@ -78,6 +90,7 @@ function loadTasks() {
     `;
 
     taskList.appendChild(li);
+      scheduleNotification(task);
   });
 }
 
@@ -104,6 +117,21 @@ function toggleTask(index) {
         .catch(err => console.log("SW error:", err));
     });
   }
+        function scheduleNotification(task) {
+  if (!task.date || !task.time) return;
+
+  let taskTime = new Date(task.date + "T" + task.time);
+  let now = new Date();
+  let delay = taskTime - now;
+
+  if (delay > 0) {
+    setTimeout(() => {
+      new Notification("⏰ Reminder", {
+        body: task.text
+      });
+    }, delay);
+  }
+        }
     </script>
 </body>
 </html>

@@ -19,52 +19,44 @@
   <h2>My To-Do App</h2>
 
   <input type="text" id="taskInput" placeholder="Enter a task">
-  <br><br>
-  <button onclick="addTask()">Add Task</button>
+<br><br>
+<input type="date" id="dateInput">
+<br><br>
+<button onclick="addTask()">Add Task</button>
 
-  <ul id="taskList"></ul>
+<ul id="taskList"></ul>
 </div>
     <script>
-       // Load tasks when page loads
-  document.addEventListener("DOMContentLoaded", loadTasks);
+    document.addEventListener("DOMContentLoaded", loadTasks);
 
-  function sayHello() {
-    alert("Welcome to my first website!");
-  }
-
-  function addTask() {
-    let taskInput = document.getElementById("taskInput");
-    let task = taskInput.value.trim();
-
-    if (task === "") {
-      alert("Please enter a task");
-      return;
-    }
-
-    let tasks = getTasks();
-    tasks.push({
-  text: task,
-  date: taskDate,
-  completed: false
-});
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    taskInput.value = "";
-dateInput.value = "";
-    loadTasks();
-  }
-
- function deleteTask(index) {
-  let tasks = getTasks();
-  tasks.splice(index, 1);
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  loadTasks();
+function getTasks() {
+  let tasks = localStorage.getItem("tasks");
+  return tasks ? JSON.parse(tasks) : [];
 }
 
-function toggleTask(index) {
+function addTask() {
+  let taskInput = document.getElementById("taskInput");
+  let dateInput = document.getElementById("dateInput");
+  let task = taskInput.value.trim();
+  let taskDate = dateInput.value;
+
+  if (task === "") {
+    alert("Please enter a task");
+    return;
+  }
+
   let tasks = getTasks();
-  tasks[index].completed = !tasks[index].completed;
+  tasks.push({
+    text: task,
+    date: taskDate,
+    completed: false
+  });
+
   localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  taskInput.value = "";
+  dateInput.value = "";
+
   loadTasks();
 }
 
@@ -77,29 +69,32 @@ function loadTasks() {
   tasks.forEach((task, index) => {
     let li = document.createElement("li");
 
-    if (task.completed) {
-      li.style.textDecoration = "line-through";
-    }
+    li.innerHTML = `
+      <span style="text-decoration:${task.completed ? 'line-through' : 'none'}">
+        ${task.text} ${task.date ? "📅 " + task.date : ""}
+      </span>
+      <button onclick="toggleTask(${index})">✔</button>
+      <button onclick="deleteTask(${index})">❌</button>
+    `;
 
-   li.innerHTML = `
-  ${task.text}
-  <button onclick="toggleTask(${index})">
-    ${task.completed ? "Undo" : "Done"}
-  </button>
-  <button onclick="deleteTask(${index})">Delete</button>
-`; 
     taskList.appendChild(li);
   });
-} 
-      
-    
-  function getTasks() {
-    return JSON.parse(localStorage.getItem("tasks")) || [];
-        }
-        
-        
-        
-    </script>
+}
+
+function deleteTask(index) {
+  let tasks = getTasks();
+  tasks.splice(index, 1);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
+
+function toggleTask(index) {
+  let tasks = getTasks();
+  tasks[index].completed = !tasks[index].completed;
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
+</script>
     <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {

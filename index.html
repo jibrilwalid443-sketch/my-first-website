@@ -120,7 +120,7 @@ function toggleTask(index) {
         function scheduleNotification(task) {
   if (!task.date || !task.time) return;
 
-  let taskTime = new Date(task.date + "T" + task.time);
+  let taskTime = new Date(task.date + " " + task.time);
   let now = new Date();
   let delay = taskTime - now;
 
